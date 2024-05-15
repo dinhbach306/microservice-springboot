@@ -1,0 +1,54 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:password@localhost:8761/eureka
+
+logging:
+  level:
+    root: INFO
+    org:
+      springframework:
+        cloud:
+          gateway:
+            route:
+              RouteDefinitionLocator: INFO
+
+# Path: api-gateway/src/main/resources/bootstrap.yml
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      # Product-service route
+      routes[0]:
+        id: product-service
+        uri: lb://product-service
+        predicates[0]: Path=/api/product
+      # Order-service route
+      routes[1]:
+        id: order-service
+        uri: lb://order-service
+        predicates[0]: Path=/api/order
+      # Naming-service route
+      routes[2]:
+        id: naming-service
+        uri: http://localhost:8761
+        predicates[0]: Path=/eureka/web
+        filters:
+          - SetPath=/
+      # Naming-service static route
+      routes[3]:
+        id: naming-service-static
+        uri: http://localhost:8761
+        predicates[0]: Path=/eureka/**
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8181/realms/spring-boot-microservices-realm
+# Actuator prometheus endpoint
+management:
+  endpoint:
+    web:
+      exposure:
+        include: prometheus

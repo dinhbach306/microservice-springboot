@@ -1,0 +1,16 @@
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+  username: ${EUREKA_USERNAME:eureka}
+  password: ${EUREKA_PASSWORD:password}
+server:
+  port: 8761
+# Actuator prometheus endpoint
+management:
+  endpoint:
+    web:
+      exposure:
+        include: prometheus

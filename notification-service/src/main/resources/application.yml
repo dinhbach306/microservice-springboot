@@ -1,0 +1,30 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:password@localhost:8761/eureka
+
+spring:
+  application:
+    name: notification-service
+  kafka:
+    bootstrap-servers: localhost:29092
+    template:
+      default-topic: notificationTopic
+    consumer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring:
+          json:
+            type:
+              mapping: event:com.dinh.microservices.event.OrderPlacedEvent
+      group-id: notificationId
+
+server:
+  port: 0
+# Actuator prometheus endpoint
+management:
+  endpoint:
+    web:
+      exposure:
+        include: prometheus
